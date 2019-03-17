@@ -1,2 +1,2 @@
 # funtion
-javaScript原生实现的各个非业务功能抽离demo
+业务上遇到过的一些非业务相关的功能
