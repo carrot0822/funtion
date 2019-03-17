@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>全屏滚动</title>
+		<script type="text/javascript" src="js/jquery-3.3.1.min.js" ></script>
+		<script type="text/javascript" src="js/jquery.mousewheel.min.js" ></script>
+		<style>
+			body{padding:0;margin:0; overflow:hidden }
+		    ul{list-style:none;}
+		    .div_01,.div_02,.div_03,.div_04{width:100%;margin:0 auto; text-align: center;}
+		    .div_01{background: #b20909;}
+		    .div_02{background: #0941b2;}
+		    .div_03{background: #2db209;}
+		    .div_04{background: #b29c09;}
+		    /*依旧不设置高度动态给与*/
+		    .left_fixed{position:fixed;width:15px; height:100px; left:100px;top:200px;z-index:999;}
+		    .left_fixed ul li{background:#000;cursor:pointer;width:15px;height: 15px;border-radius:15px;margin-bottom: 10px;}
+		    .left_fixed ul li.active{background:#fff;}
+		</style>
+	</head>
+	<body>
+		<div class="content">
+	        <div class="div_01"></div>
+	        <div class="div_02"></div>
+	        <div class="div_03"></div>
+	        <div class="div_04"></div>
+    	</div>
+	    <div class="left_fixed">
+	        <ul>
+	            <li class="active"></li>
+	            <li></li>
+	            <li></li>
+	            <li></li>
+	        </ul>
+	    </div>
+    
+	</body>
+	<script>
+		
+		//思考一下伪算法 还有看看mousewheel以及fullpage的配置
+		var i = 0;
+		var s = 0;//防止抖动？确认已经向下翻过了
+		$(function(){
+			//初始设定
+			var div_height =$(window).height();//获取浏览器的clientheight JS可代替
+			$(".div_01,.div_02,.div_03,.div_04").css({'height':div_height});//传值传过来要求是字符串还是？
+			//浏览器窗口变化的话再次动态赋予高度
+			$(window).resize(function(){
+				div_height =$(window).height();
+				$(".div_01,.div_02,.div_03,.div_04").css({'height':div_height});
+			});
+			var startTime = 0,
+				endTime =0;
+			//给浏览器绑定滚动事件 为什么内置的鼠标滚轮事件没法触发
+			$("body").mousewheel(function(event,delta) {
+				//这里的delta应该是插件自带的
+				startTime = new Date().getTime();//纪录翻屏的初始时间
+				if(delta<0&&i>=0 &&i<=2){
+					//判定向下翻页 并且没有翻到底部的时候 这里的i是可以替换的
+					if(s>=0&&(startTime == 0 || (endTime - startTime) <=-500)){
+						s =1;
+						i++;
+						renderPage(i,true);//翻屏函数
+						endTime = new Date().getTime();//纪录翻屏的结束时间 ？原因？
+						console.log(endTime);
+						console.log(startTime);
+					}
+				} else if (delta >0 && i>=1&&s==1&& (startTime == 0 || (endTime-startTime) <=-500)){
+					i--;
+					renderPage(i,true);
+					endTime = new Date().getTime();
+					console.log("结束时间"+endTime);
+					console.log("所谓的开始时间"+startTime);
+				}
+			});
+			//翻页函数
+			function renderPage(pageNumber,isScroll){
+				if (isScroll){
+					$('body,html').animate({scrollTop:pageNumber*div_height},'slow');//每次滚动增加 
+					console.log("此处的高度"+);
+					$(".left_fixed ul li").removeClass("active");
+					$(".left_fixed ul li").eq(pageNumber).addClass("active");
+				}
+				return;
+			}
+			//总感觉这个可以单独抽离出去
+			$(".left_fixed ul li").on("click",function(){
+				var index = $(this).index();
+				renderPage(index,true);
+				$(".left_fixed ul li").removeClass("active");
+				$(this).addClass("active");
+				return false;
+			});
+			
+		})
+	</script>
+
+</html>

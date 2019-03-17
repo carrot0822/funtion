@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		
+			<canvas id="canvas" margin: 0 auto;">
+			IE10以下不支持
+			</canvas>
+		
+	</body>
+	<script>
+		window.onload = function () {
+			var canvas = document.getElementById('canvas');
+			canvas.width = 1024;
+			canvas.height = 768;
+			
+			var context = canvas.getContext('2d');
+			context.lineWidth =5;
+			context.strokeStyle = '#005588';
+			for ( var i =0; i<10; i++){
+				context.beginPath(); //重新规划 不一定要一起出现
+				context.arc(50+i*100,60,40,0,2*Math.PI*(i+1)/10);
+				context.closePath();//如果不是封闭的线条 则会自动帮你封闭 对于fill是无效的
+				context.stroke();
+			}
+			
+			for ( var i =0; i<10; i++){
+				context.beginPath(); //重新规划 不一定要一起出现
+				context.arc(50+i*100,180,40,0,2*Math.PI*(i+1)/10,true);
+				//context.closePath();//如果不是封闭的线条 则会自动帮你封闭
+				context.stroke();
+			}
+			context.fillStyle = "aqua";
+			for ( var i =0; i<10; i++){
+				context.beginPath(); //重新规划 不一定要一起出现
+				context.arc(50+i*100,300,40,0,2*Math.PI*(i+1)/10,true);
+				//context.closePath();//如果不是封闭的线条 则会自动帮你封闭
+				context.stroke();
+				context.fill();
+			}
+		}
+		/*
+		 * 绘制圆6个参数 fill也会封闭 stroke是绘制线条 closePath代表首尾相连
+		 */
+	</script>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>下拉列表选择</title>
+		<script type="text/javascript">
+			function selToRight () {
+				var sel1 = document.getElementById("select1");
+				var sel2 = document.getElementById("select2");
+				var opts = sel1.getElementsByTagName("option");
+				//遍历并判断是否被选中selected = true表示选中
+				for (var i=0;i<opts.length;i++){
+					if(opts[i].selected){
+						//添加选择的部分appendchild方法
+						sel2.appendChild(opts[i]);
+						i--;
+					}
+				}
+			}
+			function allToRight () {
+				var sel1 = document.getElementById("select1");
+				var sel2 = document.getElementById("select2");
+				var opts = sel1.getElementsByTagName("option");
+				for(var i=0; i<opts.length; i++){
+					sel2.appendChild(opts[i]);
+					i--;
+				}
+			}
+			function selToLeft () {
+				var sel1 = document.getElementById("select1");
+				var sel2 = document.getElementById("select2");
+				var opts = sel2.getElementsByTagName("option");
+				//遍历并判断是否被选中selected = true表示选中
+				for (var i=0;i<opts.length;i++){
+					if(opts[i].selected){
+						//添加选择的部分appendchild方法
+						sel1.appendChild(opts[i]);
+						i--;
+					}
+				}
+			}
+			function allToLeft () {
+				var sel1 = document.getElementById("select1");
+				var sel2 = document.getElementById("select2");
+				var opts = sel2.getElementsByTagName("option");
+				for(var i=0; i<opts.length; i++){
+					sel1.appendChild(opts[i]);
+					i--;
+				}
+			}
+		</script>
+	</head>
+	<body>
+		<div style="float:left">
+			<select id="select1" multiple="multiple">
+				<option>牙膏</option>
+				<option>牙刷</option>
+				<option>洗衣液</option>
+				<option>沐浴液</option>
+			</select>
+			<br />
+			<input type="button" value="全部添加" onclick="allToRight()" />
+			<input type="button" value="添加选中部分" onclick="selToRight()" />
+		</div>
+		<div style="padding-left:300px">
+			<select id="select2" multiple="multiple">
+				<option>洗发露</option>
+			</select>
+			<br />
+			<input type="button" value="全部删除" onclick="allToLeft()" />
+			<input type="button" value="删除选中部分" onclick="selToLeft()" />
+		</div>
+	</body>
+</html>

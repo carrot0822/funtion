@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>jq实现电梯导航效果</title>
+		<script type="text/javascript" src="js/jquery-3.3.1.min.js" ></script>
+		<style>
+			*{
+				margin: 0;
+				padding: 0;
+			}
+			.side-nav{
+				width: 50px;
+				position: fixed;
+				left: 0;
+				top: 20%;
+				background: chocolate;
+			}
+			.side-nav span{
+				display: block;
+				width: 50px;
+				height: 50px;
+				text-align: center;
+				line-height: 50px;
+				color: #FFFFFF;
+				cursor: pointer;
+			}
+			.side-nav .active{
+				border: 2px solid #ddd;
+				background: #2E8AE6;
+			}
+			.floor{
+				width: 100%;
+				height: 400px;
+				margin-bottom: 20px;
+				background: pink;
+			}
+			.footer{
+				width: 100%;
+				height: 300px;
+				background: pink;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="side-nav">
+		    <span class="active">1</span>
+		    <span>2</span>
+		    <span>3</span>
+		    <span>4</span>
+		    <span>5</span>
+		    <span>6</span>
+		    <span>7</span>
+		</div>
+
+		<div class="floor floor-01"></div>
+		<div class="floor floor-02"></div>
+		<div class="floor floor-03"></div>
+		<div class="floor floor-04"></div>
+		<div class="floor floor-05"></div>
+		<div class="floor floor-06"></div>
+		<div class="floor floor-07"></div>
+		<div class="footer"></div>
+
+	<script>
+		$(function(){
+			//给一个颜色数组
+			var colorArr = ['red','orange','yellow','green','blue','cyan','purple'];
+			//便于给各个导航span元素和各个对应的楼层项目元素
+			for(i=0;i<$('.side-nav span').length;i++){
+				$('.side-nav span').eq(i).css({background:colorArr[i]});
+				$('.floor').eq(i).css({background:colorArr[i]});
+				//父元素.eq(n)会返回父元素中数组序列为n的字元素新JQ对象回来 dom选择
+			}
+			/*
+			var colorArr = ['red','orange','yellow','green','blue','cyan','purple'];
+            //便利给各个导航“span”元素，和各个对应的楼层栏目元素
+            for(i=0;i<$('.side-nav span').length;i++){
+                $('.side-nav span').eq(i).css({background:colorArr[i]});
+                $('.floor').eq(i).css({background:colorArr[i]});
+            }
+			*/
+			//获取各个楼层的距离浏览器上部偏移量，并放入数组 再点击的时候再调用 有点高明
+			var divTopArr = [];
+			for(var i=0;i<$('.floor').length;i++){
+				divTopArr.push($('.floor').eq(i).offset().top);
+			}
+			
+			//事件触发机制
+			//给导航每个栏目按钮添加点击事件，点击导航上的每个栏目 html(body)元素移动到相应位置
+			$('.side-nav span').click(function(){
+				$('body,html').animate({scrollTop:divTopArr[$(this).index()] + 'px'});
+				$('.side-nav span').removeClass('active');
+				$(this).addClass('active');
+			})
+			
+			//添加页面滚轮滚动事件 监听滚动数据 与楼层高度数据 span的位置数据绑定在一起
+			/*
+			$(window).scroll(function(){
+                //获取获取页面当前已经滚动的scrollTop值 
+                var scrollTop = $(window).scrollTop();
+                //divTopArr 遍历每一个楼层或者每个楼层对应的按钮
+                for(i=0;i<$('.side-nav span').length;i++){
+                    //判断当前页面已经滚动的top值是否大于最后一个楼层top偏移量（最后一个要拿出来单算）
+                    if(scrollTop < divTopArr[divTopArr.length-1]){
+    //          给一个循环动态判断的条件，若当前scrollTop值大于数组的arr[i],且小于arr[i+1],就对应的栏目按钮添加样式
+                        if(scrollTop >= divTopArr[i] && scrollTop < divTopArr[i+1]){
+                            $('.side-nav span').removeClass('active');
+                            $('.side-nav span').eq(i).addClass('active');
+                        }
+                    }else{
+                    //若当前scrollTop值大于数组的arr[length-1](即数组的最后一个值，最后一个栏目的offsetTop),
+                        
+                    }
+                }
+    
+            })*/
+			
+			
+			
+			$(window).scroll(function(){
+				//获取页面当前已经滚动的scrolltop值
+				var scrollTop = $(window).scrollTop();
+				//divTopArr 遍历每个楼层或者楼层对应的按钮
+				console.log(scrollTop);
+				console.log(divTopArr)
+				for(i=0;i<$('.side-nav span').length;i++){
+					//判断当前页面已经滚动的top值是否大于最后一个楼层top偏移量（最后一个单算？
+					if(scrollTop < divTopArr[divTopArr.length-1]){
+						if(scrollTop >= divTopArr[i] && scrollTop < divTopArr[i+1]){
+							$('.side-nav span').removeClass('active');
+							$('.side-nav span').eq(i).addClass('active');
+						}
+					}else{
+						//当前scrollTop值大于最后一个楼梯的时候
+						$('.side-nav span').removeClass('active');
+                        $('.side-nav span').eq(divTopArr.length-1).addClass('active');
+                        console.log();
+                        console.log(divTopArr[divTopArr.length-1]);
+						
+					}
+				}
+			})
+		})
+	</script>
+	</body>
+</html>

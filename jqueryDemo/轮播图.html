@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>轮播图</title>
+		<script type="text/javascript" src="js/jquery-3.3.1.min.js" ></script>
+		
+		<style>
+			*{
+				margin: 0;
+				padding: 0;
+			}
+			a{
+				text-decoration: none;
+			}
+			.main-slider{
+				position: relative;
+				height: 600px;
+				width: 600px;
+				overflow: hidden;
+				/*非必选*/
+				background: #cdcdcd;
+				margin: 0 auto; 
+			}
+			.slide-con{
+				position: relative;
+			}
+			.slide-con li{
+				position: absolute;
+				top: 0;
+				left: 0;
+				display: none;
+			}
+			.slide-con .active{
+				display: block;
+			}
+			.main-slider img{
+				width: 600px;
+				height: 600px;
+			}
+			/*遮罩组*/
+			.main-slider .mask{
+				position: absolute;
+				left: 0px;
+				bottom: 0px;
+				width: 100%;
+				height: 32px;
+				line-height: 32px;
+				color: #ffffff;
+				overflow: hidden;
+				background: rgba(0,0,0,.7);
+				z-index: 9;
+			}
+			.mask .prop{
+				position: absolute;
+				bottom: 0;
+				left: 0;
+				height: 32px;
+				line-height: 32px;
+				display: none;
+			}
+			.mask .prop .name{
+				float: left;
+				margin: 0 0 0 14px;
+				display: inline;
+				font-size: 14px;
+				color: #ffffff !important;
+			}
+			.mask .active{
+				display:block;
+			}
+			/*小圆点*/
+			.slidetrig{
+				position: absolute;
+				bottom: 13px;
+				right: 12px;
+				z-index: 10;
+			}
+			.slidetrig li{
+				float: left;
+				margin-left: 9px;
+				width: 8px !important;
+				height: 8px !important;
+				overflow: hidden;
+				cursor: pointer;
+				background-color:#60666d ;
+				border-radius: 50%;
+			}
+			.slidetrig .active{
+				background: #FFFFFF;
+			}
+			/*调试用按钮*/
+			.btn-focus{
+			    display: inline-block;
+			    width: 32px;
+			    height: 56px;
+			    line-height: 56px;
+			    overflow: hidden;
+			    background: rgba(0,0,0,.2);
+			    position: absolute;
+			    color: #FFFFFF;
+			    font-size: 32px;
+			    text-align: center;
+			    top: 50%;
+			    margin-top: -28px;
+			    z-index: 99;
+			   
+			}
+			.btn-focus:hover{
+				background: rgba(0,0,0,.7);
+			}
+			.btn-pre{
+				left: 0;
+			}
+			.btn-next{
+				right: 0;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="main-slider" id="slider">
+			<div class="slide-con">
+				<ul id="imgbox">
+					<li class="active"><a href="#"> <img src="img/0.png" alt="光" /></a></li>
+					<li><a href="#"> <img src="img/1.png"  alt="对立"/></a></li>
+					<li><a href="#"> <img src="img/2.png" alt="黄" /></a></li>
+					<li><a href="#"> <img src="img/3.png" alt="红" /></a></li>
+				</ul>
+			</div>
+
+			<div class="mask" id="mask">
+				<div class="prop active">
+					<a href="#" class="name">光</a>
+				</div>
+				<div class="prop">
+					<a href="#" class="name">对立</a>
+				</div>
+				<div class="prop">
+					<a href="#" class="name">忘却</a>
+				</div>
+				<div class="prop">
+					<a href="#" class="name">黄</a>
+				</div>
+			</div>
+			
+			<ol class="slidetrig" id="dotbox">
+				<li class="active"></li>
+				<li class=""></li>
+				<li class=""></li>
+				<li class=""></li>
+			</ol>
+			<a href="javascript:;" class="btn-focus btn-pre">&lt;</a>
+			<a href="javascript:;" class="btn-focus btn-next">&gt;</a>
+		</div>
+		<script>
+			/*要修改的参数就是盒子的定位 图片的大小 文字的大小 这里的绝对定位倒不是需要改 然后就是代码有点重复 是否可以优化一下*/
+			$(function(){
+				//先让图片自己动起来
+				var timer =null;
+				var index =0;
+				var len = $("#imgbox li").length;
+				//点击左右切换
+				$('.btn-pre').click(function(){
+					clearInterval(timer);
+					index--;
+					if(index<0){
+						index=len-1
+					}
+					$("#imgbox li").eq(index).fadeIn(200).siblings().fadeOut();
+					$("#dotbox li").eq(index).addClass("active").siblings().removeClass("active");
+					$("#mask .prop").eq(index).addClass("active").siblings().removeClass("active");
+				})
+				$('.btn-next').click(function(){
+					clearInterval(timer);
+					index++;
+					if(index>len-1){
+						index=0
+					}
+					$("#imgbox li").eq(index).fadeIn(200).siblings().fadeOut();
+					$("#dotbox li").eq(index).addClass("active").siblings().removeClass("active");
+					$("#mask .prop").eq(index).addClass("active").siblings().removeClass("active");
+				})
+				//点击小圆点切换
+				$("#dotbox li").click(function(){
+					clearInterval(timer); 
+					index = $(this).index();
+					$(this).addClass("active").siblings().removeClass("active");
+					$("#imgbox li").eq(index).fadeIn(200).siblings().fadeOut();
+				})
+				//鼠标滑动上去停止 关掉定时器即可
+				$("#slider").hover(function(){
+					clearInterval(timer);
+				},function(){
+					showImg();
+				})
+				//自动切换
+				function showImg (){
+					timer = setInterval(function(){
+						index++; //1S过后index增加一个
+						if (index>=len){
+							index =0;
+						}//如果已经是最后一张了就归0到第一张
+						$("#imgbox li").eq(index).fadeIn(200).siblings().fadeOut();
+						$("#dotbox li").eq(index).addClass("active").siblings().removeClass("active");
+						$("#mask .prop").eq(index).addClass("active").siblings().removeClass("active");
+					},1000);
+				}
+				showImg();
+			})
+		</script>
+	</body>
+</html>

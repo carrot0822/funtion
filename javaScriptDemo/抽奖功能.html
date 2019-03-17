@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>抽奖功能</title>
+		<script type="text/javascript">
+			var alldata = "a,b,c,d,e,f,g,h,i,j,k,l,m,n";
+			var alldataarr = alldata.split(",");
+			var num = alldataarr.length;
+			var timer
+			function start () {
+				clearInterval(timer);
+				timer = setInterval ('change()',10);
+			}
+			function change () {
+				document.getElementById('oknum').innerHTML = alldataarr[getRnd(num,0)];
+			}
+			function getRnd (max,min) {
+				return parseInt(Math.random()*(max-min));
+			}
+			function ok () {
+				clearInterval(timer);
+				document.getElementById("showresult").value=document.getElementById("oknum").innerText;
+			}
+		</script>
+	</head>
+	<body>
+		<div id="oknum" name="oknum">
+			请单击开始
+		</div>
+		<button onclick="start()" accesskey="s">开始</button>
+		<button onclick="ok()" accesskey="o">停止</button>
+		<input type="text" id="showresult" value="" />
+	</body>
+</html>

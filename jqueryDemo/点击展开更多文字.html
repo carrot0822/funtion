@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Jquery实现页面详情展开</title>
+		<script type="text/javascript" src="js/jquery-3.3.1.min.js" ></script>
+		<style>
+			html,body,div,h2,p{margin: 0;padding: 0;}
+			html{font: 1em Arial, Helvetica, sans-serif;color: #444;}
+			a{color: #0087f1;}
+			p{margin-bottom: 5px;}
+			#container{
+				margin: 0 auto;
+				width: 600px;
+			}
+			#container h2{
+				font-size: 20px;
+				color: #0087F1;
+			}
+			#wrap{
+				position: relative;
+				padding: 10px;
+				overflow: hidden;
+			}
+			#gradient{
+				width: 100%;
+				height: 35px;
+				background: rgba(0,0,0,.7);
+				position: absolute;
+				bottom: 0;
+				left: 0;
+			}
+			#read-more{
+				padding: 5px;
+				border-top: 4px double #ddd;
+				background: #fff;
+				color: #333;
+			}
+			#read-more a{
+					padding-right: 22px;
+					font-weight: bold;
+					text-decoration: none;
+			}
+			#read-more a: hover{color: #000;}
+
+		</style>
+	</head>
+	<body>
+		<div id="container">
+			<h1>jQuery 控制段落文字展开折叠，点击查看更多的功能</h1>
+			<h2>About Billabong</h2>
+			<div id="wrap">
+				<div>
+					 <p>Gordon developed his own stitching technique, which made the garments more durable, cost effective and less labor intensive. He employed machinists, moved the operation into a factory, set up a distribution network and sponsored a team of renowned Australian surfers. The business thrived.</p>
+    				 <p>Since those beginnings, Billabong has expanded its product range to include boardsport products such as wetsuits, watches, surfboards, snowboard outerwear and skateboarding apparel.</p>
+    				 
+				</div>
+				<div id="gradient"></div>
+			</div>
+			<div id="read-more"></div>
+		</div>
+		<script type="text/javascript">
+			/*这里的做法是限制高度
+			 */
+			$(function(){
+				var slideHeight = 75;//设定限制的高度
+				var defHeight = $('#wrap').height();//获取本身的高度
+				/*用高度进行判定 这里的readmore和渐变感觉都可以动态生成 这样是否可以封装为一个组件？
+				 *第一层判定 是否隐藏和动态生成控制元素 如果隐藏则生成控制元素并生成控制器
+				 * 第二层判定 事件点击触发 判定此时的高度是处于收缩还是展开状态
+				 * 收缩状态：则点击之后把高度还原 因为设置了overflow属性
+				 */
+				if (defHeight >= slideHeight) {
+					$('#wrap').css('height',slideHeight + 'px');
+					$('#read-more').append('<a href="#">点击查看更多...</a>');
+					$('#read-more a').click(function(){
+						var curHeight = $('#wrap').height();//依靠此时的容器高度来判定   点击前确认是收起状态则展开
+						if (curHeight == slideHeight){
+							$('#wrap').animate({
+								height:defHeight//这个动画函数？
+							},"normal");
+							$('#read-more a').html('点击隐藏');
+							$('#gradient').fadeOut();
+						}else{
+							$('#wrap').animate({
+								height: slideHeight
+							},"normal");
+							$("#read-more a").html('点击查看更多...');
+							$('#gradient').fadeIn();
+						}
+						return false;
+					})
+				}
+			})
+		</script>
+	</body>
+</html>

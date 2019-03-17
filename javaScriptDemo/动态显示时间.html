@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>动态显示时间</title>
+	</head>
+	<body>
+		<div id="div1"></div>
+		<script type="text/javascript">
+			function showDate () {
+				var date = new Date(); //获取时间对象
+				var d = date.toLocaleString();//获取本地时间格式
+				var div1 = document.getElementById('div1');//把内容赋予节点
+				div1.innerHTML = d;
+			}
+			window.setInterval("showDate()",1000);
+		</script>
+	</body>
+</html>
