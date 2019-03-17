@@ -1,0 +1,2 @@
+# funtion
+javaScript原生实现的各个非业务功能抽离demo
